@@ -1,0 +1,72 @@
+﻿@page "/"
+@using Blazorex
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Testing</h1>
+
+<CanvasManager @ref="_canvasManager" />
+
+@code{
+    CanvasManager _canvasManager;
+	IRenderContext _context;
+
+	int cubeSize = 30;
+	int vw = 800;
+	int vh = 600;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _canvasManager.CreateCanvas("main", new CanvasCreationOptions()
+        {
+            Hidden = false,
+            Width = 800,
+            Height = 600,
+            OnCanvasReady = this.OnMainCanvasReady,
+            OnFrameReady = this.OnMainFrameReady,
+            OnResize = this.OnMainCanvasResize,
+        });
+    }
+
+	private void OnMainCanvasReady(CanvasBase canvas)
+    {
+        _context = canvas.RenderContext;
+    }
+
+    private void OnMainFrameReady(float timestamp)
+    {
+        this.Render();
+    }
+
+    private void OnMainCanvasResize(Size windowSize)
+    {
+
+    }
+
+	private void DrawDots() {
+
+		int r = 1;
+		int cw = cubeSize;
+		int ch = cubeSize;
+		
+		for (var x = 0; x < vw; x+=cw) {
+			for (var y = 0; y < vh; y+=ch) {
+				_context.FillStyle = "#777777";   
+				_context.FillRect(x-r/2,y-r/2,r,r);
+			}
+		}
+	}
+
+	private void  Render(){
+		_context.ClearRect(0, 0, vw, vh);
+
+		_context.FillStyle = "#Ece7d7";
+		_context.FillRect(0, 0, vw, vh);  
+		DrawDots();
+	}
+}
+
