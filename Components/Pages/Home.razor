@@ -8,13 +8,13 @@
 
 <CanvasManager @ref="_canvasManager" />
 
-@code{
+@code {
     CanvasManager _canvasManager;
-	IRenderContext _context;
+    IRenderContext _context;
 
-	int cubeSize = 30;
-	int vw = 800;
-	int vh = 600;
+    int cubeSize = 30;
+    int vw = 800;
+    int vh = 600;
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -22,17 +22,17 @@
             return;
 
         _canvasManager.CreateCanvas("main", new CanvasCreationOptions()
-        {
-            Hidden = false,
-            Width = 800,
-            Height = 600,
-            OnCanvasReady = this.OnMainCanvasReady,
-            OnFrameReady = this.OnMainFrameReady,
-            OnResize = this.OnMainCanvasResize,
-        });
+            {
+                Hidden = false,
+                Width = 800,
+                Height = 600,
+                OnCanvasReady = this.OnMainCanvasReady,
+                OnFrameReady = this.OnMainFrameReady,
+                OnResize = this.OnMainCanvasResize,
+            });
     }
 
-	private void OnMainCanvasReady(CanvasBase canvas)
+    private void OnMainCanvasReady(CanvasBase canvas)
     {
         _context = canvas.RenderContext;
     }
@@ -47,26 +47,85 @@
 
     }
 
-	private void DrawDots() {
+    private void DrawDots()
+    {
 
-		int r = 1;
-		int cw = cubeSize;
-		int ch = cubeSize;
-		
-		for (var x = 0; x < vw; x+=cw) {
-			for (var y = 0; y < vh; y+=ch) {
-				_context.FillStyle = "#777777";   
-				_context.FillRect(x-r/2,y-r/2,r,r);
-			}
-		}
-	}
+        int r = 1;
+        int cw = cubeSize;
+        int ch = cubeSize;
 
-	private void  Render(){
-		_context.ClearRect(0, 0, vw, vh);
+        for (var x = 0; x < vw; x += cw)
+        {
+            for (var y = 0; y < vh; y += ch)
+            {
+                _context.FillStyle = "#777777";
+                _context.FillRect(x - r / 2, y - r / 2, r, r);
+            }
+        }
+    }
 
-		_context.FillStyle = "#Ece7d7";
-		_context.FillRect(0, 0, vw, vh);  
-		DrawDots();
-	}
+    private void Render()
+    {
+        _context.ClearRect(0, 0, vw, vh);
+
+        _context.FillStyle = "#Ece7d7";
+        _context.FillRect(0, 0, vw, vh);
+        DrawDots();
+    }
+
+
+    private void DrawRoom(int posX, int posY, int width, int height)
+    {
+        posX = posX * cubeSize;
+        posY = posY * cubeSize;
+        width = width * cubeSize;
+        height = height * cubeSize;
+
+        _context.FillStyle = "#000000";
+        _context.FillRect(posX, posY, width, height);
+        _context.Stroke();
+        _context.FillStyle = "#ffffff";
+        _context.FillRect(posX + 1, posY + 1, width - 2, height - 2);
+        _context.Stroke();
+    }
+
+    private void DrawDoor(int posX, int posY, string orientation, bool isMain = false)
+    {
+
+        var doorColor = "#B3D2D3";
+        if (isMain == false)
+        {
+            doorColor = "#DEC5C0";
+        }
+
+
+        if (orientation == "H")
+        {
+            int doorWith = 30; // one square
+            int doorHeight = 10;
+            posX = (posX - 1) * cubeSize;
+            posY = (posY * cubeSize) - 5;
+
+            _context.FillStyle = "#000000";
+            _context.FillRect(posX, posY, doorWith, doorHeight);
+            _context.Stroke();
+            _context.FillStyle = doorColor;
+            _context.FillRect(posX + 1, posY + 1, doorWith - 2, doorHeight - 2);
+            _context.Stroke();
+        }
+        else
+        {
+            int doorWith = 10;
+            int doorHeight = 30;// one square
+            posX = (posX * cubeSize) - 5;
+            posY = (posY - 1) * cubeSize;
+
+            _context.FillStyle = "#000000";
+            _context.FillRect(posX, posY, doorWith, doorHeight);
+            _context.Stroke();
+            _context.FillStyle = doorColor;
+            _context.FillRect(posX + 1, posY + 1, doorWith - 2, doorHeight - 2);
+            _context.Stroke();
+        }
+    }
 }
-

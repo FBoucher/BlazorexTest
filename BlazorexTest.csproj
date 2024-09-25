@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Blazorex" Version="1.0.4" />
+    <PackageReference Include="Blazorex" Version="1.1.0" />
   </ItemGroup>
 
 </Project>
